@@ -3,6 +3,7 @@ import Triangulator from "../../Triangulator";
 
 
 const colors = [0x414141, 0x6b7478, 0xcfd9ce, 0x7c8e51, 0x384d47];
+const greens = ["#1E5631", "#A4DE02", "#FFFFFF", "#76BA1B", "#4C9A2A", "#ACDF87", "#68BB59"]
 
 /*
 
@@ -92,7 +93,11 @@ function triangles(state = [], action, points) {
                 newTriangles.push({
                     id: index,
                     points: points,
-                    fill: colors[index % colors.length],
+                    fill: {
+                        start: greens[index % greens.length],
+                        end: greens[(index + 1) % greens.length],
+                        rotation: 0
+                    },
                     sideLengths: sides,
                     altitudes: calcualteAltitudes(sides)
                 })

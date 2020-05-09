@@ -96,8 +96,7 @@ class Point extends React.Component {
                                const pos = e.data.getLocalPosition(this.state.app.stage);
                                this.setPosition(pos.x, pos.y);
                            }
-                       }
-                       }
+                       }}
                        click={e => e.stopPropagation()}/>;
     }
 }

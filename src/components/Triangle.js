@@ -2,10 +2,10 @@ import {Graphics, Matrix, Polygon, Texture} from 'pixi.js';
 import {PixiComponent} from '@inlet/react-pixi';
 import {connect} from "react-redux";
 import {colorTriangle} from "../redux/actions/triangles";
-import refTexture from '../img/uv.jpg'
 
 function gradient(from, to, orientation) {
     const c = document.createElement("canvas");
+    console.log(from, to, orientation)
     c.width=512
     c.height=512
     const ctx = c.getContext("2d");
@@ -40,11 +40,11 @@ const Triangle = PixiComponent('Triangle', {
         instance.interactive = true;
         instance.hitArea = tri;
         instance.buttonMode = true;
-        instance.click = (e) => {console.log("click triangle", points, e); colorTriangle(id, !fill)}
+        // instance.click = (e) => {console.log("click triangle", points, e); colorTriangle(id, !fill)}
 
         // const texture = gradient("#A4DE02", "#1E5631")
         // const texture = fill ? gradient("#A4DE02", "#FFFFFF", fill) : Texture.from(refTexture);
-        const texture = gradient("#A4DE02", "#1E5631", fill);
+        const texture = gradient(fill.start, fill.end, fill.rotation);
         // console.log(texture, texture.valid, texture.baseTexture.width, texture.orig.width, texture.orig.height, texture.width, texture.height)
 
 
