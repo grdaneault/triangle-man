@@ -15,13 +15,17 @@ class Wallpaper extends React.Component {
 
     render() {
         const triangles = this.props.triangles.map(triangle => <Triangle id={triangle.id} key={triangle.id} />)
-        const points = this.props.points.map((point) => <Point x={point.x} y={point.y} size={25} key={point.id} id={point.id} />)
+        let points = [];
+        if (this.props.showPoints) {
+            points = this.props.points.map((point) => <Point x={point.x} y={point.y} size={25} key={point.id}
+                                                                   id={point.id}/>)
+        }
         return (
             <Stage options={{antialias: true, resizeTo: window}} onClick={this.addPoint} onKeyDown={console.log} onKeyPress={console.log} onKeyDownCapture={console.log }>
                 <Provider store={store}>
                     <Graphics>
                         {triangles}
-                        {points}
+                        {this.props.showPoints && points}
                     </Graphics>
                 </Provider>
             </Stage>)

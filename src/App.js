@@ -10,16 +10,25 @@ function randomInRange(low, high) {
 }
 
 class App extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             gridSize: 300,
             rows: 0,
-            cols: 0
+            cols: 0,
+            showPoints: false
         }
         this.generatePoints()
+    }
+
+    handleInputChange = (event) => {
+        const target = event.target;
+        const name = target.name;
+        const value = name === 'showPoints' ? target.checked : target.value;
+        this.setState({
+            [name]: value
+        });
     }
 
     generatePoints = debounce(() =>{
@@ -27,7 +36,7 @@ class App extends React.Component {
         const {addPoints, resetPoints} = this.props;
 
         resetPoints();
-        const gridSize = 300;
+        const gridSize = this.state.gridSize;
 
         const rows = Math.ceil(height / gridSize),
             cols = Math.ceil(width / gridSize);
@@ -59,7 +68,6 @@ class App extends React.Component {
         addPoints(points);
 
         this.setState( {
-            gridSize,
             rows,
             cols
         });
@@ -89,7 +97,7 @@ class App extends React.Component {
     }
 
     render() {
-        const {gridSize, width, height} = this.state;
+        const {gridSize, width, height, showPoints} = this.state;
         const {points, triangles} = this.props;
 
         return (
@@ -98,8 +106,9 @@ class App extends React.Component {
                     <p>Grid size: {gridSize}px</p>
                     <p>Number of points: {points.length}</p>
                     <p>Number of triangles: {triangles.length}</p>
+                    <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints} onChange={this.handleInputChange} /></label>
                 </div>
-                <Wallpaper width={width} height={height} />
+                <Wallpaper width={width} height={height} showPoints={showPoints}/>
             </div>
         );
     }

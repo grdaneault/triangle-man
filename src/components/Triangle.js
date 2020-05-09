@@ -43,13 +43,11 @@ const Triangle = PixiComponent('Triangle', {
         instance.click = (e) => {console.log("click triangle", points, e); colorTriangle(id, !fill)}
 
         // const texture = gradient("#A4DE02", "#1E5631")
-        const texture = fill ? gradient("#A4DE02", "#FFFFFF", fill) : Texture.from(refTexture);
-        // const texture = gradient("#A4DE02", "#1E5631", fill);
-        // texture.update()
+        // const texture = fill ? gradient("#A4DE02", "#FFFFFF", fill) : Texture.from(refTexture);
+        const texture = gradient("#A4DE02", "#1E5631", fill);
         // console.log(texture, texture.valid, texture.baseTexture.width, texture.orig.width, texture.orig.height, texture.width, texture.height)
 
 
-        console.log("Slope", slope)
         instance.clear()
             .beginTextureFill({
                 // texture: ,
