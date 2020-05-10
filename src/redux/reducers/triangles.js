@@ -1,48 +1,6 @@
 import {ADD_POINTS, COLOR_TRIANGLE, RESET_POINTS, SET_POINT_POSITION} from '../actions/actionTypes'
-import Triangulator from "../../Triangulator";
+import Triangulator, {createTriangle, generateFill} from "../../Triangulator";
 
-
-const colors = [0x414141, 0x6b7478, 0xcfd9ce, 0x7c8e51, 0x384d47];
-const greens = ["#1E5631", "#A4DE02", "#FFFFFF", "#76BA1B", "#4C9A2A", "#ACDF87", "#68BB59"]
-
-/*
-
-        0
-       /|\
-      c B a
-     /  |  \
-    2---b---1
-
- */
-
-/**
- *
- * @param points
- */
-const calculateSideLengths = (points) => {
-    const a = distance(points[0], points[1])
-    const b = distance(points[1], points[2])
-    const c = distance(points[2], points[0])
-    return [a, b, c]
-}
-
-const calculateSemiperimeter = (lengths) => {
-    return lengths.reduce((a, b) => a + b, 0) / 2;
-}
-
-const calculateArea = (lengths) => {
-    const s = calculateSemiperimeter(lengths);
-    return Math.sqrt(s * (s - lengths[0]) * (s - lengths[1]) * (s - lengths[2]))
-}
-
-const calcualteAltitudes = (lengths) => {
-    const area = calculateArea(lengths);
-    return lengths.map(length => 2 * area / length)
-}
-
-const distance = (a, b) => {
-    return Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
-}
 
 function triangles(state = [], action, points) {
     switch (action.type) {
@@ -73,12 +31,7 @@ function triangles(state = [], action, points) {
 
                 if (newPoints.length === 3) {
                     console.log(newPoints)
-                    const sides = calculateSideLengths(newPoints);
-                    return Object.assign({}, triangle, {
-                        points: newPoints,
-                        sideLengths: sides,
-                        altitudes: calcualteAltitudes(sides),
-                    });
+                    return Object.assign({}, triangle, createTriangle(newPoints));
                 } else {
                     return triangle
                 }
@@ -88,18 +41,11 @@ function triangles(state = [], action, points) {
             const delaunayPoints = points.map((point) => [point.x, point.y])
             const triangulator = new Triangulator(delaunayPoints)
             const newTriangles = [];
-            triangulator.forEachTriangle((index, points) => {
-                const sides = calculateSideLengths(points);
+            triangulator.forEachTriangle((index, triangle) => {
                 newTriangles.push({
                     id: index,
-                    points: points,
-                    fill: {
-                        start: greens[index % greens.length],
-                        end: greens[(index + 1) % greens.length],
-                        rotation: 0
-                    },
-                    sideLengths: sides,
-                    altitudes: calcualteAltitudes(sides)
+                    fill: generateFill(triangle.points),
+                    ...triangle
                 })
             })
             console.log("generated triangles", newTriangles)

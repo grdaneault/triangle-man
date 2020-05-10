@@ -15,6 +15,7 @@ class App extends React.Component {
 
         this.state = {
             gridSize: 300,
+            pointChance: 0.6,
             rows: 0,
             cols: 0,
             showPoints: false
@@ -36,7 +37,7 @@ class App extends React.Component {
         const {addPoints, resetPoints} = this.props;
 
         resetPoints();
-        const gridSize = this.state.gridSize;
+        const {gridSize, pointChance} = this.state;
 
         const rows = Math.ceil(height / gridSize),
             cols = Math.ceil(width / gridSize);
@@ -45,9 +46,11 @@ class App extends React.Component {
 
         for (let row = -2; row < rows + 2; row += 1) {
             for (let col = -2; col < cols + 2; col += 1) {
-                const x = col * gridSize + randomInRange(0, gridSize),
-                    y = row * gridSize + randomInRange(0, gridSize);
-                points.push({x, y})
+                if (Math.random() < pointChance) {
+                    const x = col * gridSize + randomInRange(0, gridSize),
+                        y = row * gridSize + randomInRange(0, gridSize);
+                    points.push({x, y})
+                }
             }
         }
 
