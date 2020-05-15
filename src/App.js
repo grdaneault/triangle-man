@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
-import {addPoints, resetPoints} from "./redux/actions";
+import {addPoints, resetPoints, updateTriangleAesthetic} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
 import {debounce} from "underscore";
+import sample1 from "./img/sample1.jpg";
 
 function randomInRange(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -14,12 +15,33 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            gridSize: 300,
-            pointChance: 0.6,
+            gridSize: 250,
+            pointChance: 0.7,
             rows: 0,
             cols: 0,
             showPoints: false
         }
+
+        this.sourceTexture = new Image();
+
+        const renderImage = (img) => {
+            const canvas = document.createElement("canvas");
+            const {height, width} = this.getWindowDimensions();
+            canvas.width = width;
+            canvas.height = height
+            const ctx = canvas.getContext("2d");
+            console.log("image", img);
+            ctx.drawImage(img, 0, 0, width, height);
+            const textureData = ctx.getImageData(0, 0, width, height).data;
+            this.props.updateTriangleAesthetic(textureData, width, height);
+            console.log(this.textureData)
+        }
+
+        this.sourceTexture.onload = function () {
+            renderImage(this);
+        }
+
+        this.sourceTexture.src = sample1
         this.generatePoints()
     }
 
@@ -124,4 +146,4 @@ const mapStateToProps = (store) => {
     }
 }
 
-export default connect(mapStateToProps, {addPoints, resetPoints})(App);
+export default connect(mapStateToProps, {addPoints, resetPoints, updateTriangleAesthetic})(App);

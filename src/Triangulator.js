@@ -3,10 +3,20 @@ import React from "react";
 import chroma from "chroma-js";
 
 class Triangulator {
-    constructor(points, colors) {
+    constructor(points, sourceFile, screenWidth, screenHeight) {
         this.points = points;
         this.delaunay = Delaunator.from(points);
-        this.colors = colors;
+        this.imageWidth = screenWidth;
+
+
+    }
+
+    getPixelColor(x, y) {
+        if (!this.textureData) {
+            return chroma('white')
+        }
+        const index = (y * this.imageWidth + x) * 4;
+        return chroma(this.textureData.slice(index, index+4))
     }
 
     edgesOfTriangle(t) {
@@ -21,7 +31,7 @@ class Triangulator {
     forEachTriangle(callback) {
         for (let t = 0; t < this.delaunay.triangles.length / 3; t++) {
             const points = this.pointsOfTriangle(t).map(p => this.points[p]);
-            callback(t, createTriangle(points));
+            callback(t, {...createTriangle(points)});
         }
     }
 }
@@ -30,27 +40,6 @@ export default Triangulator
 
 const greens = ["#1E5631", "#A4DE02", "#76BA1B", "#4C9A2A", "#ACDF87", "#68BB59"]
 
-export const generateFill = (points) => {
-    let start = greens[Math.floor(Math.random() * greens.length)];
-    let end = start;
-    const choice = Math.random()
-    if (choice < 0.25) {
-        end = chroma(start).darken(1)
-    } else if (choice < 0.5) {
-        end = chroma(start).brighten(1)
-    } else if (choice < 0.6) {
-        end = greens[Math.floor(Math.random() * greens.length)];
-    } else if (choice < 0.7) {
-        start = "#FFFFFF"
-        end = "#FFFFFF"
-    }
-
-    return {
-        start,
-        end,
-        rotation: 0
-    }
-}
 
 /**
  * @param lengths side lengths of the triangle

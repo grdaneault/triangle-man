@@ -1,6 +1,6 @@
 import {ADD_POINTS, COLOR_TRIANGLE, RESET_POINTS, SET_POINT_POSITION} from '../actions/actionTypes'
-import Triangulator, {createTriangle, generateFill} from "../../Triangulator";
-
+import Triangulator, {createTriangle} from "../../Triangulator";
+import sample1 from '../../img/sample1.jpg'
 
 function triangles(state = [], action, points) {
     switch (action.type) {
@@ -39,16 +39,16 @@ function triangles(state = [], action, points) {
         case ADD_POINTS:
             console.log("add points for triangle", typeof points, points)
             const delaunayPoints = points.map((point) => [point.x, point.y])
-            const triangulator = new Triangulator(delaunayPoints)
+            const triangulator = new Triangulator(delaunayPoints, sample1, 1920, 1080)
             const newTriangles = [];
             triangulator.forEachTriangle((index, triangle) => {
                 newTriangles.push({
                     id: index,
-                    fill: generateFill(triangle.points),
                     ...triangle
                 })
             })
             console.log("generated triangles", newTriangles)
+            console.log(typeof sample1, sample1)
             return newTriangles;
 
         case RESET_POINTS:
