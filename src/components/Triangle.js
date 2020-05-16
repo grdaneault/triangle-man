@@ -3,23 +3,16 @@ import {PixiComponent} from '@inlet/react-pixi';
 import {connect} from "react-redux";
 import {colorTriangle} from "../redux/actions";
 import chroma from "chroma-js";
+import DitheredLinearGradient from "./DitheredLinearGradientRGB";
 
-function gradient(from, to, orientation) {
+function gradient(from, to, orientation, resolution) {
     const c = document.createElement("canvas");
-    // console.log(from, to, orientation)
-    c.width = 512
-    c.height = 512
+    c.width = c.height = resolution;
     const ctx = c.getContext("2d");
-    let grd;
-    if (orientation) {
-        grd = ctx.createLinearGradient(0, 0, 0, 512);
-    } else {
-        grd = ctx.createLinearGradient(512, 0, 0, 512);
-    }
+    let grd = new DitheredLinearGradient(0, 0, resolution, 0);
     grd.addColorStop(0, from);
     grd.addColorStop(1, to);
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, 512, 512);
+    grd.fillRect(ctx, 0, 0, resolution, resolution + 1);
     return Texture.from(c);
 }
 
@@ -52,7 +45,9 @@ const Triangle = PixiComponent('Triangle', {
             start = fill.start
             end = fill.end
         }
-        let texture = gradient(start, end, 0);
+
+        const resolution = 512;
+        let texture = gradient(start, end, 0, resolution);
         // console.log(texture, texture.valid, texture.baseTexture.width, texture.orig.width, texture.orig.height, texture.width, texture.height)
         // texture = Texture.from(uv)
 
@@ -62,7 +57,7 @@ const Triangle = PixiComponent('Triangle', {
                 // texture: ,
                 texture: texture,
                 matrix: new Matrix()
-                    .scale(sideLengths[longestSide] / 512 * Math.sign(slope), altitudes[longestSide] / 512 * Math.sign(slope))
+                    .scale(sideLengths[longestSide] / resolution * Math.sign(slope), altitudes[longestSide] / resolution * Math.sign(slope))
                     .rotate(Math.atan(slope))
                     .translate(points[(longestSide + 1) % 3][0], points[(longestSide + 1) % 3][1])
 
@@ -83,15 +78,13 @@ const getFill = (aesthetic, points) => {
     // img        |   x                        |
     const x = Math.round((center[0] - aesthetic.pointDimensions.minX) / (aesthetic.pointDimensions.maxX - aesthetic.pointDimensions.minX) * aesthetic.sourceDimensions.width);
     const y = Math.round((center[1] - aesthetic.pointDimensions.minY) / (aesthetic.pointDimensions.maxY - aesthetic.pointDimensions.minY) * aesthetic.sourceDimensions.height);
-    console.log(`Found x: ${x}, y: ${y} from x: ${center[0]}, y: ${center[1]}`, aesthetic.pointDimensions, aesthetic.sourceDimensions)
     const index = (aesthetic.sourceDimensions.width * y + x) * 4;
     const [r, g, b] = aesthetic.data.slice(index, index + 4);
     const start = chroma(r, g, b)
-    console.log(`Found coord ${x},${y} (${index})has color ${start.hex()}`, r, g, b)
     const factor = y % 5 / 4;
     return {
         start: start.hex(),
-        end: x % 2 === 0 ? start.brighten(factor) : start.darken(factor)
+        end: x % 2 === 3 ? start.brighten(factor) : start.darken(factor)
     }
 }
 

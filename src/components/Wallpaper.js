@@ -21,7 +21,7 @@ class Wallpaper extends React.Component {
                                                                    id={point.id}/>)
         }
         return (
-            <Stage options={{antialias: true, resizeTo: window}} onClick={this.addPoint} onKeyDown={console.log} onKeyPress={console.log} onKeyDownCapture={console.log }>
+            <Stage options={{antialias: true, resizeTo: window, resolution:parseFloat(this.props.resolution), backgroundColor: 0xFFFFFF}} onClick={this.addPoint} onKeyDown={console.log} onKeyPress={console.log} onKeyDownCapture={console.log }>
                 <Provider store={store}>
                     <Graphics>
                         {triangles}

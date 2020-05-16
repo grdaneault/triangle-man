@@ -4,7 +4,8 @@ import {addPoints, resetPoints, updateTriangleAesthetic} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
 import {debounce} from "underscore";
-import sample1 from "./img/sample1.jpg";
+import sample1 from "./img/sample4.jpg";
+import Button from "@material-ui/core/Button";
 
 function randomInRange(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -16,10 +17,11 @@ class App extends React.Component {
 
         this.state = {
             gridSize: 250,
-            pointChance: 0.7,
+            pointChance: 0.65,
             rows: 0,
             cols: 0,
-            showPoints: false
+            showPoints: false,
+            resolution: 1.25
         }
 
         this.sourceTexture = new Image();
@@ -83,7 +85,7 @@ class App extends React.Component {
 
         // const offsetX = 200;
         // const offsetY = 200;
-        // const triHeight = 800;
+        // const triHeight = 600;
         //
         // points.push({x: offsetX, y: offsetY});
         // points.push({x: offsetX + triHeight, y: offsetY + triHeight});
@@ -122,7 +124,7 @@ class App extends React.Component {
     }
 
     render() {
-        const {gridSize, width, height, showPoints} = this.state;
+        const {gridSize, width, height, showPoints, resolution} = this.state;
         const {points, triangles} = this.props;
 
         return (
@@ -132,8 +134,9 @@ class App extends React.Component {
                     <p>Number of points: {points.length}</p>
                     <p>Number of triangles: {triangles.length}</p>
                     <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints} onChange={this.handleInputChange} /></label>
+                    <Button onClick={this.generatePoints} >Regenerate</Button>
                 </div>
-                <Wallpaper width={width} height={height} showPoints={showPoints}/>
+                <Wallpaper width={width} height={height} showPoints={showPoints} resolution={resolution}/>
             </div>
         );
     }
