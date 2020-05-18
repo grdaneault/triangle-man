@@ -3,7 +3,7 @@ import {Graphics, Stage, withPixiApp} from "@inlet/react-pixi";
 import Point from "./Point";
 import {connect, Provider} from "react-redux";
 import store from "../redux/store";
-import {addPoint} from "../redux/actions";
+import {addPoint, registerApp} from "../redux/actions";
 import Triangle from "./Triangle";
 
 
@@ -20,8 +20,16 @@ class Wallpaper extends React.Component {
             points = this.props.points.map((point) => <Point x={point.x} y={point.y} size={25} key={point.id}
                                                                    id={point.id}/>)
         }
+
+        const options = {
+            antialias: true,
+            resizeTo: window,
+            resolution:parseFloat(this.props.resolution),
+            backgroundColor: 0xFFFFFF,
+            // Without this the toBlob just sees black
+            preserveDrawingBuffer: true}
         return (
-            <Stage options={{antialias: true, resizeTo: window, resolution:parseFloat(this.props.resolution), backgroundColor: 0xFFFFFF}} onClick={this.addPoint} onKeyDown={console.log} onKeyPress={console.log} onKeyDownCapture={console.log }>
+            <Stage options={options} onMount={this.props.registerApp}>
                 <Provider store={store}>
                     <Graphics>
                         {triangles}
@@ -39,4 +47,4 @@ const mapStateToProps = (store) => {
     }
 }
 
-export default connect(mapStateToProps, {addPoint})(withPixiApp(Wallpaper));
+export default connect(mapStateToProps, {addPoint, registerApp})(withPixiApp(Wallpaper));

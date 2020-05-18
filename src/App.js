@@ -6,6 +6,7 @@ import Wallpaper from "./components/Wallpaper";
 import {debounce} from "underscore";
 import sample1 from "./img/sample4.jpg";
 import Button from "@material-ui/core/Button";
+import { saveAs } from 'file-saver';
 
 function randomInRange(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -45,6 +46,12 @@ class App extends React.Component {
 
         this.sourceTexture.src = sample1
         this.generatePoints()
+    }
+
+    download = () => {
+        this.props.pixiApp.renderer.view.toBlob((blob) => {
+            saveAs(blob, "wallpaper.png")
+        }, 'image/png');
     }
 
     handleInputChange = (event) => {
@@ -134,7 +141,10 @@ class App extends React.Component {
                     <p>Number of points: {points.length}</p>
                     <p>Number of triangles: {triangles.length}</p>
                     <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints} onChange={this.handleInputChange} /></label>
-                    <Button onClick={this.generatePoints} >Regenerate</Button>
+                    <p>
+                        <Button onClick={this.generatePoints} >Regenerate</Button>
+                        <Button onClick={this.download} >Download</Button>
+                    </p>
                 </div>
                 <Wallpaper width={width} height={height} showPoints={showPoints} resolution={resolution}/>
             </div>
@@ -143,9 +153,11 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (store) => {
+    console.log(store.pixiApp, store)
     return {
         points: store.shapeData.points,
-        triangles: store.shapeData.triangles
+        triangles: store.shapeData.triangles,
+        pixiApp: store.pixiApp
     }
 }
 

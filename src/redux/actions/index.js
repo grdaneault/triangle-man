@@ -5,7 +5,8 @@ import {
     DELETE_POINT,
     RESET_POINTS,
     SET_POINT_POSITION,
-    UPDATE_TRIANGLE_AESTHETIC
+    UPDATE_TRIANGLE_AESTHETIC,
+    REGISTER_APP
 } from './actionTypes'
 
 let currentPointId = 0;
@@ -49,4 +50,9 @@ export const updateTriangleAesthetic = (imageData, inputWidth, inputHeight) => (
     imageData,
     inputWidth,
     inputHeight
+})
+
+export const registerApp = (app) => ({
+    type: REGISTER_APP,
+    app
 })

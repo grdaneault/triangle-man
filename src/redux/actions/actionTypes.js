@@ -1,3 +1,4 @@
+export const REGISTER_APP = 'REGISTER_APP';
 export const RESET_POINTS = 'RESET_POINTS';
 export const SET_POINT_POSITION = 'SET_POINT_POSITION';
 export const ADD_POINT = 'ADD_POINT';

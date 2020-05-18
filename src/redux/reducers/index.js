@@ -2,6 +2,7 @@ import {combineReducers} from 'redux'
 import points from "./points";
 import triangles from "./triangles";
 import aesthetic from "./aesthetic";
+import pixiApp from "./pixiApp";
 
 const shapeData = (state = {
     points: [],
@@ -18,4 +19,4 @@ const shapeData = (state = {
     }
 }
 
-export default combineReducers({shapeData});
+export default combineReducers({shapeData, pixiApp});
