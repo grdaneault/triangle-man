@@ -41,6 +41,7 @@ export const addPoints = (points) => {
 }
 
 export const addPointsAndGenerateTriangles = (points) => (dispatch) => {
+    dispatch(reset())
     dispatch(addPoints(points));
     dispatch(generateTriangles())
     const delaunayPoints = points.map((point) => [point.x, point.y])

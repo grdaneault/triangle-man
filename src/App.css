@@ -31,3 +31,14 @@ body, html {
   margin: 0;
   overflow: hidden;
 }
+
+div.Loading {
+  z-index: 1000;
+  color: #EFEFEF;
+  font-size: 2rem;
+  flex-direction: column;
+}
+
+div.Loading p {
+  padding: 2rem;
+}

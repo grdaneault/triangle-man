@@ -7,6 +7,10 @@ import {debounce} from "underscore";
 import Button from "@material-ui/core/Button";
 import {saveAs} from 'file-saver';
 import sample from './img/sample1.jpg'
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {Text} from "@inlet/react-pixi";
+import Typography from "@material-ui/core/Typography";
 
 function randomInRange(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -43,7 +47,7 @@ class App extends React.Component {
         });
     }
 
-    generatePoints = debounce(() =>{
+    generatePoints = debounce(() => {
         const {height, width} = this.getWindowDimensions();
         const {addPointsAndGenerateTriangles, reset, applyImageTheme} = this.props;
 
@@ -83,7 +87,7 @@ class App extends React.Component {
         console.log("Sample?", sample)
         applyImageTheme(sample);
 
-        this.setState( {
+        this.setState({
             rows,
             cols
         });
@@ -105,7 +109,7 @@ class App extends React.Component {
     }
 
     getWindowDimensions() {
-        const { innerWidth: width, innerHeight: height } = window;
+        const {innerWidth: width, innerHeight: height} = window;
         return {
             width,
             height
@@ -116,16 +120,27 @@ class App extends React.Component {
         const {gridSize, width, height, showPoints, resolution} = this.state;
         const {points, triangles} = this.props;
 
+        const isLoading = triangles.length === 0 || !triangles[0].fill
+
+        const message = triangles.length === 0 ? 'Generating Triangles' : 'Generating Gradients'
         return (
             <div className="App">
+                <Backdrop className="Loading" open={isLoading}>
+                    {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
+                    <CircularProgress color={"inherit"} size={180} shrinkAnimation={false} />
+                    <Typography>
+                        {message}
+                    </Typography>
+                </Backdrop>
                 <div className="Controls">
                     <p>Grid size: {gridSize}px</p>
                     <p>Number of points: {points.length}</p>
                     <p>Number of triangles: {triangles.length}</p>
-                    <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints} onChange={this.handleInputChange} /></label>
+                    <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints}
+                                               onChange={this.handleInputChange}/></label>
                     <p>
-                        <Button onClick={this.generatePoints} >Regenerate</Button>
-                        <Button onClick={this.download} >Download</Button>
+                        <Button onClick={this.generatePoints}>Regenerate</Button>
+                        <Button onClick={this.download}>Download</Button>
                     </p>
                 </div>
                 <Wallpaper width={width} height={height} showPoints={showPoints} resolution={resolution}/>
