@@ -1,22 +1,8 @@
 import {combineReducers} from 'redux'
 import points from "./points";
 import triangles from "./triangles";
-import aesthetic from "./aesthetic";
+import themes from "./themes";
 import pixiApp from "./pixiApp";
+import currentTheme from "./currentTheme";
 
-const shapeData = (state = {
-    points: [],
-    triangles: []
-}, action) => {
-    const p = points(state.points, action)
-    const t = triangles(state.triangles, action, p)
-    const a = aesthetic(state.aesthetic, action, p);
-
-    return  {
-        points: p,
-        triangles: t,
-        aesthetic: a
-    }
-}
-
-export default combineReducers({shapeData, pixiApp});
+export default combineReducers({points, triangles, pixiApp, currentTheme, themes});

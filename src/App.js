@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import {addPoints, resetPoints, updateTriangleAesthetic} from "./redux/actions";
+import {addPointsAndGenerateTriangles, applyImageTheme, reset} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
 import {debounce} from "underscore";
-import sample1 from "./img/sample4.jpg";
 import Button from "@material-ui/core/Button";
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
+import sample from './img/sample1.jpg'
 
 function randomInRange(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -25,26 +25,6 @@ class App extends React.Component {
             resolution: 1.25
         }
 
-        this.sourceTexture = new Image();
-
-        const renderImage = (img) => {
-            const canvas = document.createElement("canvas");
-            const {height, width} = this.getWindowDimensions();
-            canvas.width = width;
-            canvas.height = height
-            const ctx = canvas.getContext("2d");
-            console.log("image", img);
-            ctx.drawImage(img, 0, 0, width, height);
-            const textureData = ctx.getImageData(0, 0, width, height).data;
-            this.props.updateTriangleAesthetic(textureData, width, height);
-            console.log(this.textureData)
-        }
-
-        this.sourceTexture.onload = function () {
-            renderImage(this);
-        }
-
-        this.sourceTexture.src = sample1
         this.generatePoints()
     }
 
@@ -65,9 +45,9 @@ class App extends React.Component {
 
     generatePoints = debounce(() =>{
         const {height, width} = this.getWindowDimensions();
-        const {addPoints, resetPoints} = this.props;
+        const {addPointsAndGenerateTriangles, reset, applyImageTheme} = this.props;
 
-        resetPoints();
+        reset();
         const {gridSize, pointChance} = this.state;
 
         const rows = Math.ceil(height / gridSize),
@@ -99,7 +79,9 @@ class App extends React.Component {
         // // points.push({x: offsetX + triHeight, y: offsetY});
         // points.push({x: offsetX, y: offsetY + triHeight});
 
-        addPoints(points);
+        addPointsAndGenerateTriangles(points);
+        console.log("Sample?", sample)
+        applyImageTheme(sample);
 
         this.setState( {
             rows,
@@ -153,12 +135,11 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (store) => {
-    console.log(store.pixiApp, store)
     return {
-        points: store.shapeData.points,
-        triangles: store.shapeData.triangles,
+        points: store.points,
+        triangles: store.triangles,
         pixiApp: store.pixiApp
     }
 }
 
-export default connect(mapStateToProps, {addPoints, resetPoints, updateTriangleAesthetic})(App);
+export default connect(mapStateToProps, {addPointsAndGenerateTriangles, reset, applyImageTheme})(App);

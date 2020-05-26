@@ -1,22 +1,10 @@
 import Delaunator from "delaunator";
 import React from "react";
-import chroma from "chroma-js";
 
 class Triangulator {
-    constructor(points, sourceFile, screenWidth, screenHeight) {
+    constructor(points) {
         this.points = points;
         this.delaunay = Delaunator.from(points);
-        this.imageWidth = screenWidth;
-
-
-    }
-
-    getPixelColor(x, y) {
-        if (!this.textureData) {
-            return chroma('white')
-        }
-        const index = (y * this.imageWidth + x) * 4;
-        return chroma(this.textureData.slice(index, index+4))
     }
 
     edgesOfTriangle(t) {

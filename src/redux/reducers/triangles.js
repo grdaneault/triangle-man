@@ -1,8 +1,7 @@
-import {ADD_POINTS, COLOR_TRIANGLE, RESET_POINTS, SET_POINT_POSITION} from '../actions/actionTypes'
-import Triangulator, {createTriangle} from "../../Triangulator";
-import sample1 from '../../img/sample1.jpg'
+import {COLOR_TRIANGLE, COLOR_TRIANGLES, RESET, SET_POINT_POSITION, UPDATE_TRIANGLES} from '../actions/actionTypes'
+import {createTriangle} from "../../Triangulator";
 
-function triangles(state = [], action, points) {
+function triangles(state = [], action) {
     switch (action.type) {
         case COLOR_TRIANGLE:
             return state.map((triangle) => {
@@ -11,6 +10,12 @@ function triangles(state = [], action, points) {
                 }
                 return triangle;
             });
+        case COLOR_TRIANGLES:
+            return state.map((triangle) => {
+                const fill = action.fills[triangle.id];
+                console.assert(fill, 'Triangle missing a fill!', triangle, action.fills);
+                return {...triangle, fill}
+            })
         case SET_POINT_POSITION:
             console.log("updating point in state", action);
             return state.map((triangle) => {
@@ -36,28 +41,15 @@ function triangles(state = [], action, points) {
                     return triangle
                 }
             });
-        case ADD_POINTS:
-            console.log("add points for triangle", typeof points, points)
-            const delaunayPoints = points.map((point) => [point.x, point.y])
-            const triangulator = new Triangulator(delaunayPoints, sample1, 1920, 1080)
-            const newTriangles = [];
-            triangulator.forEachTriangle((index, triangle) => {
-                newTriangles.push({
-                    id: index,
-                    ...triangle
-                })
-            })
-            console.log("generated triangles", newTriangles)
-            console.log(typeof sample1, sample1)
-            return newTriangles;
-
-        case RESET_POINTS:
-            console.log("Resetting points list");
+        case UPDATE_TRIANGLES:
+            return action.triangles;
+        case RESET:
             return [];
         default:
             return state;
     }
 }
+
 
 export default triangles
 

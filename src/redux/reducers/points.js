@@ -1,4 +1,4 @@
-import {ADD_POINT, RESET_POINTS, DELETE_POINT, SET_POINT_POSITION, ADD_POINTS} from '../actions/actionTypes'
+import {ADD_POINT, ADD_POINTS, DELETE_POINT, RESET, SET_POINT_POSITION} from '../actions/actionTypes'
 
 function points(state = [], action) {
     switch (action.type) {
@@ -7,20 +7,17 @@ function points(state = [], action) {
         case ADD_POINTS:
             return [...state, ...action.points];
         case DELETE_POINT:
-            console.log("removing point from state", action);
             return state.filter((point) => {
                 return point.id !== action.id;
             });
         case SET_POINT_POSITION:
-            console.log(`updating point ${action.id}: (${action.oldX}, ${action.oldY}) -> (${action.newX}, ${action.newY})`);
             return state.map((point) => {
                 if (point.id === action.id) {
-                    return Object.assign({}, point, {x: action.newX, y:action.newY});
+                    return {...point, ...{x: action.newX, y: action.newY}};
                 }
                 return point;
             });
-        case RESET_POINTS:
-            console.log("Resetting points list");
+        case RESET:
             return [];
         default:
             return state;
