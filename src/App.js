@@ -14,7 +14,7 @@ function App(props) {
     const {width, height} = useWindowSize();
     const [isExpanded, setExpanded] = useState(false);
 
-    const {points, triangles, pointSettings: {gridSize, showPoints}, generateWallpaper} = props;
+    const {triangles, generateWallpaper} = props;
     // Empty dependency list to only generate the points on load/unload
     useEffect(() => generateWallpaper(), []);
 
@@ -31,17 +31,14 @@ function App(props) {
                 </Typography>
             </Backdrop>
             <Controls />
-            <Wallpaper width={width} height={height} showPoints={showPoints}/>
+            <Wallpaper width={width} height={height} />
         </div>
     );
 }
 
 const mapStateToProps = (store) => {
     return {
-        points: store.points,
-        triangles: store.triangles,
-        pixiApp: store.pixiApp,
-        pointSettings: store.pointSettings
+        triangles: store.triangles
     }
 }
 

@@ -42,6 +42,7 @@ function Wallpaper(props) {
 const mapStateToProps = (store) => {
     return {
         points: store.points,
+        showPoints: store.pointSettings.visible,
         triangles: store.triangles,
         resolution: store.resolution
     }
