@@ -53,6 +53,7 @@ function calcBounds(points) {
 
 export function generateFillFunctionForImageTheme(theme, allPoints) {
     const bounds = calcBounds(allPoints);
+    const gradientCache = [];
 
     return (points) => {
         const center = [(points[0][0] + points[1][0] + points[2][0]) / 3, (points[0][1] + points[1][1] + points[2][1]) / 3];
@@ -67,6 +68,14 @@ export function generateFillFunctionForImageTheme(theme, allPoints) {
         const start = chroma(r, g, b)
         const end = start.darken(1);
 
-        return createGradientTexture(start, end, 256)
+        const match = gradientCache.filter((item) => chroma.distance(start, item.start) < 1.5);
+        if (match && match.length > 0) {
+            console.log("Reused a gradient")
+            return match[0].gradient
+        } else {
+            const gradient = createGradientTexture(start, end, 256)
+            gradientCache.push({start, end, gradient})
+            return gradient;
+        }
     }
 }
