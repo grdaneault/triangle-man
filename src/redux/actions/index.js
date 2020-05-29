@@ -165,10 +165,11 @@ export const generateWallpaper = () => (dispatch, getState) => {
     console.log("Generating wallpaper", rows, cols, resolution, pointSettings);
 
     const points = []
+    const pointThreshold = pointChance / 100;
 
     for (let row = -2; row < rows + 2; row += 1) {
         for (let col = -2; col < cols + 2; col += 1) {
-            if (Math.random() < pointChance) {
+            if (Math.random() < pointThreshold) {
                 const x = col * gridSize + randomInRange(0, gridSize),
                     y = row * gridSize + randomInRange(0, gridSize);
                 points.push({x, y})
