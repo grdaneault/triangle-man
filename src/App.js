@@ -1,160 +1,48 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {addPointsAndGenerateTriangles, applyImageTheme, reset} from "./redux/actions";
+import {generateWallpaper} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
-import {debounce} from "underscore";
-import Button from "@material-ui/core/Button";
-import {saveAs} from 'file-saver';
-import sample from './img/sample1.jpg'
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {Text} from "@inlet/react-pixi";
 import Typography from "@material-ui/core/Typography";
+import useWindowSize from "./hooks/windowSize";
+import Controls from "./components/Controls";
 
-function randomInRange(low, high) {
-    return Math.floor(Math.random() * (high - low + 1) + low);
-}
+function App(props) {
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
+    const {width, height} = useWindowSize();
+    const [isExpanded, setExpanded] = useState(false);
 
-        this.state = {
-            gridSize: 250,
-            pointChance: 0.65,
-            rows: 0,
-            cols: 0,
-            showPoints: false,
-            resolution: 1.25
-        }
+    const {points, triangles, pointSettings: {gridSize, showPoints}, generateWallpaper} = props;
+    // Empty dependency list to only generate the points on load/unload
+    useEffect(() => generateWallpaper(), []);
 
-        this.generatePoints()
-    }
+    const isLoading = triangles.length === 0 || !triangles[0].fill
 
-    download = () => {
-        this.props.pixiApp.renderer.view.toBlob((blob) => {
-            saveAs(blob, "wallpaper.png")
-        }, 'image/png');
-    }
-
-    handleInputChange = (event) => {
-        const target = event.target;
-        const name = target.name;
-        const value = name === 'showPoints' ? target.checked : target.value;
-        this.setState({
-            [name]: value
-        });
-    }
-
-    generatePoints = debounce(() => {
-        const {height, width} = this.getWindowDimensions();
-        const {addPointsAndGenerateTriangles, reset, applyImageTheme} = this.props;
-
-        reset();
-        const {gridSize, pointChance} = this.state;
-
-        const rows = Math.ceil(height / gridSize),
-            cols = Math.ceil(width / gridSize);
-
-        const points = []
-
-        for (let row = -2; row < rows + 2; row += 1) {
-            for (let col = -2; col < cols + 2; col += 1) {
-                if (Math.random() < pointChance) {
-                    const x = col * gridSize + randomInRange(0, gridSize),
-                        y = row * gridSize + randomInRange(0, gridSize);
-                    points.push({x, y})
-                }
-            }
-        }
-
-
-        // points.push({x: offsetX, y: offsetY});
-        // points.push({x: offsetX + (2 * triHeight), y: offsetY});
-        // points.push({x: offsetX + triHeight, y: offsetY + triHeight});
-
-        // const offsetX = 200;
-        // const offsetY = 200;
-        // const triHeight = 600;
-        //
-        // points.push({x: offsetX, y: offsetY});
-        // points.push({x: offsetX + triHeight, y: offsetY + triHeight});
-        // // points.push({x: offsetX + triHeight, y: offsetY});
-        // points.push({x: offsetX, y: offsetY + triHeight});
-
-        addPointsAndGenerateTriangles(points);
-        console.log("Sample?", sample)
-        applyImageTheme(sample);
-
-        this.setState({
-            rows,
-            cols
-        });
-    }, 250);
-
-    componentDidMount() {
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-        window.addEventListener('resize', this.updateWindowDimensions);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-
-    updateWindowDimensions() {
-        const {width, height} = this.getWindowDimensions();
-        this.setState({width, height});
-        this.generatePoints();
-    }
-
-    getWindowDimensions() {
-        const {innerWidth: width, innerHeight: height} = window;
-        return {
-            width,
-            height
-        };
-    }
-
-    render() {
-        const {gridSize, width, height, showPoints, resolution} = this.state;
-        const {points, triangles} = this.props;
-
-        const isLoading = triangles.length === 0 || !triangles[0].fill
-
-        const message = triangles.length === 0 ? 'Generating Triangles' : 'Generating Gradients'
-        return (
-            <div className="App">
-                <Backdrop className="Loading" open={isLoading}>
-                    {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
-                    <CircularProgress color={"inherit"} size={180} shrinkAnimation={false} />
-                    <Typography>
-                        {message}
-                    </Typography>
-                </Backdrop>
-                <div className="Controls">
-                    <p>Grid size: {gridSize}px</p>
-                    <p>Number of points: {points.length}</p>
-                    <p>Number of triangles: {triangles.length}</p>
-                    <label>Show points: <input type="checkbox" name="showPoints" checked={showPoints}
-                                               onChange={this.handleInputChange}/></label>
-                    <p>
-                        <Button onClick={this.generatePoints}>Regenerate</Button>
-                        <Button onClick={this.download}>Download</Button>
-                    </p>
-                </div>
-                <Wallpaper width={width} height={height} showPoints={showPoints} resolution={resolution}/>
-            </div>
-        );
-    }
+    const message = triangles.length === 0 ? 'Generating Triangles' : 'Generating Gradients'
+    return (
+        <div className={`App Shrink`}>
+            <Backdrop className="Loading" open={isLoading}>
+                {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
+                <CircularProgress color={"inherit"} size={180} shrinkAnimation={false}/>
+                <Typography>
+                    {message}
+                </Typography>
+            </Backdrop>
+            <Controls />
+            <Wallpaper width={width} height={height} showPoints={showPoints}/>
+        </div>
+    );
 }
 
 const mapStateToProps = (store) => {
     return {
         points: store.points,
         triangles: store.triangles,
-        pixiApp: store.pixiApp
+        pixiApp: store.pixiApp,
+        pointSettings: store.pointSettings
     }
 }
 
-export default connect(mapStateToProps, {addPointsAndGenerateTriangles, reset, applyImageTheme})(App);
+export default connect(mapStateToProps, {generateWallpaper})(App);

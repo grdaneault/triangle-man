@@ -11,11 +11,14 @@ import {
     REGISTER_APP,
     RESET,
     SET_POINT_POSITION,
+    SET_TARGET_RESOLUTION,
     SET_THEME,
+    UPDATE_POINT_SETTINGS,
     UPDATE_TRIANGLES
 } from "./actionTypes";
 import Triangulator from "../../Triangulator";
 import {generateFillFunctionForImageTheme, loadImageTexture} from "../../graphics";
+import sample from "../../img/sample1.jpg";
 
 export const registerApp = (app) => ({
     type: REGISTER_APP,
@@ -136,4 +139,57 @@ export const applyImageTheme = (file) => (dispatch, getState) => {
 
         dispatch(colorTriangles(fills));
     })
+}
+
+export const updateSettings = (newSettings) => ({
+    type: UPDATE_POINT_SETTINGS,
+    newSettings
+});
+
+export const setTargetResolution = (width, height) => ({
+    type: SET_TARGET_RESOLUTION,
+    width, height
+})
+
+function randomInRange(low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low);
+}
+
+export const generateWallpaper = () => (dispatch, getState) => {
+    const {resolution, pointSettings} = getState();
+    const {gridSize, pointChance} = pointSettings;
+
+    const rows = Math.ceil(resolution.height / gridSize),
+        cols = Math.ceil(resolution.width / gridSize);
+
+    console.log("Generating wallpaper", rows, cols, resolution, pointSettings);
+
+    const points = []
+
+    for (let row = -2; row < rows + 2; row += 1) {
+        for (let col = -2; col < cols + 2; col += 1) {
+            if (Math.random() < pointChance) {
+                const x = col * gridSize + randomInRange(0, gridSize),
+                    y = row * gridSize + randomInRange(0, gridSize);
+                points.push({x, y})
+            }
+        }
+    }
+
+
+    // points.push({x: offsetX, y: offsetY});
+    // points.push({x: offsetX + (2 * triHeight), y: offsetY});
+    // points.push({x: offsetX + triHeight, y: offsetY + triHeight});
+
+    // const offsetX = 200;
+    // const offsetY = 200;
+    // const triHeight = 600;
+    //
+    // points.push({x: offsetX, y: offsetY});
+    // points.push({x: offsetX + triHeight, y: offsetY + triHeight});
+    // // points.push({x: offsetX + triHeight, y: offsetY});
+    // points.push({x: offsetX, y: offsetY + triHeight});
+
+    addPointsAndGenerateTriangles(points)(dispatch);
+    applyImageTheme(sample)(dispatch, getState);
 }

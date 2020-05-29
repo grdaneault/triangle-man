@@ -4,5 +4,7 @@ import triangles from "./triangles";
 import themes from "./themes";
 import pixiApp from "./pixiApp";
 import currentTheme from "./currentTheme";
+import resolution from "./resolution";
+import pointSettings from "./pointSettings";
 
-export default combineReducers({points, triangles, pixiApp, currentTheme, themes});
+export default combineReducers({points, triangles, pixiApp, currentTheme, themes, resolution, pointSettings});

@@ -2,15 +2,18 @@ import {Graphics, Matrix, Polygon} from 'pixi.js';
 import {PixiComponent} from '@inlet/react-pixi';
 import {connect} from "react-redux";
 import {colorTriangle} from "../redux/actions";
-import chroma from "chroma-js";
 import {createGradientTexture} from "../graphics";
 
 const defaultGradient = createGradientTexture('#DDDDDD', '#FFFFFF', 256)
 
 const Triangle = PixiComponent('Triangle', {
-    create: props => new Graphics(),
-    applyProps: (instance, _, newProps) => {
+    create: _ => new Graphics(),
+    applyProps: (instance, oldProps, newProps) => {
         const {points, sideLengths, altitudes, fill} = newProps;
+        if (!points) {
+            // not sure why this update is happening, but the triangles seem to be attempting to update to a no-data state on regen.
+            return;
+        }
         let longestSide = 0;
         for (let i = 0; i < 3; i++) {
             if (sideLengths[longestSide] < sideLengths[i]) {
@@ -26,11 +29,6 @@ const Triangle = PixiComponent('Triangle', {
         instance.hitArea = tri;
         instance.buttonMode = true;
         // instance.click = (e) => {console.log("click triangle", points, e); colorTriangle(id, !fill)}
-
-        // const texture = gradient("#A4DE02", "#1E5631")
-        // const texture = fill ? gradient("#A4DE02", "#FFFFFF", fill) : Texture.from(refTexture);
-        let start = "#FFFFFF";
-        let end = chroma("white").darken(1);
 
         const resolution = 256;
         let texture = fill ? fill : defaultGradient;
