@@ -8,11 +8,11 @@
   background-color: #EFEFEF;
   padding: 15px;
   margin: 15px;
-  opacity: 25%;
+  opacity: 0.25;
 }
 
 .Controls:hover {
-  opacity: 100%;
+  opacity: 1;
 }
 
 .Controls p {
@@ -46,4 +46,8 @@ div.Loading {
 
 div.Loading p {
   padding: 2rem;
+}
+
+img.SourceImage {
+  max-width: 100%;
 }
