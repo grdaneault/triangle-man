@@ -1,45 +1,43 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import {generateWallpaper} from "./redux/actions";
+import {addImageTheme, generateWallpaper} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
-import useWindowSize from "./hooks/windowSize";
 import Controls from "./components/Controls";
+import defaultImage from './img/sample9.jpg';
+import {READY} from "./redux/reducers/renderState";
 
 function App(props) {
 
-    const {width, height} = useWindowSize();
-    const [isExpanded, setExpanded] = useState(false);
+    const {renderState, generateWallpaper, addImageTheme} = props;
 
-    const {triangles, generateWallpaper} = props;
-    // Empty dependency list to only generate the points on load/unload
-    useEffect(() => generateWallpaper(), []);
+    useEffect(() => {
+        addImageTheme("default", defaultImage);
+        generateWallpaper();
+    }, [generateWallpaper, addImageTheme]);
 
-    const isLoading = triangles.length === 0 || !triangles[0].fill
-
-    const message = triangles.length === 0 ? 'Generating Triangles' : 'Generating Gradients'
     return (
         <div className={`App Shrink`}>
-            <Backdrop className="Loading" open={isLoading}>
+            <Backdrop className="Loading" open={renderState !== READY}>
                 {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
-                <CircularProgress color={"inherit"} size={180} shrinkAnimation={false}/>
+                <CircularProgress color={"inherit"} size={180} disableShrink />
                 <Typography>
-                    {message}
+                    {renderState}
                 </Typography>
             </Backdrop>
             <Controls />
-            <Wallpaper width={width} height={height} />
+            <Wallpaper />
         </div>
     );
 }
 
 const mapStateToProps = (store) => {
     return {
-        triangles: store.triangles
+        renderState: store.renderState
     }
 }
 
-export default connect(mapStateToProps, {generateWallpaper})(App);
+export default connect(mapStateToProps, {generateWallpaper, addImageTheme})(App);

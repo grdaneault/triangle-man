@@ -19,17 +19,23 @@ function Wallpaper(props) {
                                                     id={point.id}/>)
     }
 
+    const {width, height} = props.resolution;
+
     const options = {
         antialias: true,
-        width: props.resolution.width,
-        height: props.resolution.height,
-        resolution: parseFloat(props.resolution),
+        width,
+        height,
         backgroundColor: 0xFFFFFF,
         // Without this the toBlob just sees black
         preserveDrawingBuffer: true
     }
+
     return (
-        <Stage options={options} onMount={props.registerApp} >
+        <Stage options={options}
+               onMount={props.registerApp}
+               width={width}
+               height={height}
+        >
             <Provider store={store}>
                 <Graphics>
                     {triangles}

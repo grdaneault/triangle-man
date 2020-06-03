@@ -17,8 +17,7 @@ import {
     UPDATE_TRIANGLES
 } from "./actionTypes";
 import Triangulator from "../../Triangulator";
-import {generateFillFunctionForImageTheme, loadImageTexture} from "../../graphics";
-import sample from "../../img/sample1.jpg";
+import {generateFillFunctionForImageTheme} from "../../graphics";
 
 export const registerApp = (app) => ({
     type: REGISTER_APP,
@@ -100,15 +99,14 @@ export const setTheme = (name) => ({
     name
 });
 
-export const loadImageTheme = (themeName, file) => ({
+export const loadImageTheme = (name, data, width, height) => ({
     type: LOAD_IMAGE_THEME,
-    themeName,
-    file: file
+    name, data, width, height
 })
 
-export const addImageTheme = (name, data, width, height) => ({
+export const addImageTheme = (name, source) => ({
     type: ADD_IMAGE_THEME,
-    name, data, width, height
+    name, source
 })
 
 export const addPaletteTheme = (name, colors) => ({
@@ -116,29 +114,26 @@ export const addPaletteTheme = (name, colors) => ({
     name, colors
 })
 
-export const applyImageTheme = (file) => (dispatch, getState) => {
-    const themeName = `img-${file}`
-    dispatch(loadImageTheme(themeName, file))
-    dispatch(setTheme(themeName))
+export const applyCurrentThemeIfLoaded = () => (dispatch, getState) => {
+    const currentTheme = getState().currentTheme;
+    if (getState().themes[currentTheme].data) {
+        dispatch(applyCurrentTheme());
+    }
+}
 
-    loadImageTexture(file).then((data) => {
-        const width = 1920;
-        const height = 1080;
-        dispatch(addImageTheme(themeName, data, width, height));
+export const applyCurrentTheme = () => (dispatch, getState) => {
+    const themeName = getState().currentTheme;
+    const triangles = getState().triangles;
+    const points = getState().points;
+    const theme = getState().themes[themeName];
 
-        const triangles = getState().triangles;
-        const points = getState().points;
-        const theme = getState().themes[themeName];
+    const fillFunction = generateFillFunctionForImageTheme(theme, points);
 
-        const fillFunction = generateFillFunctionForImageTheme(theme, points);
-
-        const fills = triangles.reduce((map, triangle) => {
-            map[triangle.id] = fillFunction(triangle.points)
-            return map;
-        }, {});
-
-        dispatch(colorTriangles(fills));
-    })
+    const fills = triangles.reduce((map, triangle) => {
+        map[triangle.id] = fillFunction(triangle.points)
+        return map;
+    }, {});
+    dispatch(colorTriangles(fills));
 }
 
 export const updateSettings = (newSettings) => ({
@@ -161,8 +156,6 @@ export const generateWallpaper = () => (dispatch, getState) => {
 
     const rows = Math.ceil(resolution.height / gridSize),
         cols = Math.ceil(resolution.width / gridSize);
-
-    console.log("Generating wallpaper", rows, cols, resolution, pointSettings);
 
     const points = []
     const pointThreshold = pointChance / 100;
@@ -191,6 +184,6 @@ export const generateWallpaper = () => (dispatch, getState) => {
     // // points.push({x: offsetX + triHeight, y: offsetY});
     // points.push({x: offsetX, y: offsetY + triHeight});
 
-    addPointsAndGenerateTriangles(points)(dispatch);
-    applyImageTheme(sample)(dispatch, getState);
+    dispatch(addPointsAndGenerateTriangles(points));
+    dispatch(applyCurrentThemeIfLoaded());
 }

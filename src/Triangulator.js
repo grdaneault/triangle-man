@@ -1,5 +1,4 @@
 import Delaunator from "delaunator";
-import React from "react";
 
 class Triangulator {
     constructor(points) {
@@ -26,7 +25,7 @@ class Triangulator {
 
 export default Triangulator
 
-const greens = ["#1E5631", "#A4DE02", "#76BA1B", "#4C9A2A", "#ACDF87", "#68BB59"]
+export const greens = ["#1E5631", "#A4DE02", "#76BA1B", "#4C9A2A", "#ACDF87", "#68BB59"]
 
 
 /**
