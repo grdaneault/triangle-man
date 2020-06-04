@@ -5,6 +5,7 @@ import {connect, Provider} from "react-redux";
 import store from "../redux/store";
 import {addPoint, registerApp} from "../redux/actions";
 import Triangle from "./Triangle";
+import useWindowSize from "../hooks/windowSize";
 
 
 function Wallpaper(props) {
@@ -30,11 +31,18 @@ function Wallpaper(props) {
         preserveDrawingBuffer: true
     }
 
+    const windowSize = useWindowSize();
+    const canvasStyle = {};
+    if (windowSize.width / width * height > windowSize.height) {
+        canvasStyle.height = windowSize.height;
+    } else {
+        canvasStyle.width = windowSize.width;
+    }
+
     return (
         <Stage options={options}
                onMount={props.registerApp}
-               width={width}
-               height={height}
+               style={canvasStyle}
         >
             <Provider store={store}>
                 <Graphics>

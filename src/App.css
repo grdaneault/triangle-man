@@ -2,12 +2,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  width:300px;
-  border: 2px #D0D0D0 dashed;
-  border-radius: 5px;
-  background-color: #EFEFEF;
-  padding: 15px;
-  margin: 15px;
+  width: 300px;
+  margin: 16px;
   opacity: 0.25;
 }
 
@@ -15,7 +11,7 @@
   opacity: 1;
 }
 
-.Controls p {
+.Controls p.Details {
   padding: 0;
   margin: 0 0 0.5rem;
 }
@@ -50,4 +46,13 @@ div.Loading p {
 
 img.SourceImage {
   max-width: 100%;
+}
+
+.ControlFormItem {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.FullWidth {
+  width: 100%;
 }
