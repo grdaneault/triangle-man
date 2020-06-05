@@ -50,30 +50,33 @@ const KNOWN_RESOLUTIONS = [
 
 const resolutionString = (width, height) => `${width}x${height}`;
 
+const resolutionOptions = KNOWN_RESOLUTIONS.map(({long, short, resolutions}, index) => {
+    const options = resolutions.map(({width, height}) => {
+        const xStr = resolutionString(width, height);
+        return <MenuItem value={xStr} key={xStr}>{xStr}</MenuItem>;
+    });
+    options.unshift(<ListSubheader key={index}>{long}:{short}</ListSubheader>);
+    return options
+}).flat();
+resolutionOptions.push(<MenuItem value="custom" key={"custom"}>Custom</MenuItem>)
+
 function ResolutionSelector({redraw, resolution: {width, height}, setTargetResolution}) {
-
-    const [isCustomResolution, setIsCustomResolution] = useState(!KNOWN_RESOLUTIONS.find(group => group.resolutions.find(res => res.width === width && res.height === height)));
-    useEffect(() => {
-        setIsCustomResolution(!KNOWN_RESOLUTIONS.find(group => group.resolutions.find(res => res.width === width && res.height === height)))
-    }, [width, height]);
-
-    const resolutionOptions = KNOWN_RESOLUTIONS.map(({long, short, resolutions}, index) => {
-        const options = resolutions.map(({width, height}) => {
-            const xStr = resolutionString(width, height);
-            return <MenuItem value={xStr} key={xStr}>{xStr}</MenuItem>;
-        });
-        options.unshift(<ListSubheader key={index}>{long}:{short}</ListSubheader>);
-
-        return options
-    }).flat();
-    resolutionOptions.push(<MenuItem value="custom">Custom</MenuItem>)
 
     const [customWidth, setCustomWidth] = useState(width);
     const [customHeight, setCustomHeight] = useState(height);
+    const [isCustomResolution, setIsCustomResolution] = useState(!KNOWN_RESOLUTIONS.find(group => group.resolutions.find(res => res.width === width && res.height === height)));
+    const customResolutionHasChanged = width !== customWidth || height !== customHeight;
+
+    useEffect(() => {
+        setIsCustomResolution(!KNOWN_RESOLUTIONS.find(group => group.resolutions.find(res => res.width === width && res.height === height)))
+        setCustomWidth(width);
+        setCustomHeight(height);
+    }, [width, height]);
 
     const dimensionChangeHandler = (setter) => event => {
-        const numericValue = event.target.value.replace(/\D/gi, '');
-        setter(parseInt(numericValue, 10));
+        const sanitized = event.target.value.replace(/\D/gi, '');
+        const numeric = parseInt(sanitized, 10)
+        setter(isNaN(numeric) ? '' : numeric);
     }
 
     return (
@@ -83,7 +86,6 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
                         labelId="resolution-select-label"
                         id="resolution-select"
                         value={isCustomResolution ? "custom" : resolutionString(width, height)}
-                        disablePortal={true}
                         onChange={(event) => {
                             if (event.target.value === "custom") {
                                 setIsCustomResolution(true);
@@ -106,9 +108,11 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
                         <TextField id="" label="Height" value={customHeight} onChange={dimensionChangeHandler(setCustomHeight)}/>
                     </Grid>
                     <Grid item>
-                        <Button startIcon={<CheckIcon/>} onClick={() => {
-                            setTargetResolution(customWidth, customHeight);
-                            redraw();
+                        <Button startIcon={<CheckIcon/>} disabled={!customResolutionHasChanged} onClick={() => {
+                            if (customResolutionHasChanged) {
+                                setTargetResolution(customWidth, customHeight);
+                                redraw();
+                            }
                         }}>Apply</Button>
                     </Grid>
                 </Grid>)}

@@ -63,7 +63,7 @@ class DitheredLinearGradient {
         let image = ctx.getImageData(rectX0, rectY0, rectW, rectH);
         let pixelData = image.data;
         let len = pixelData.length;
-        let oldpixel, newpixel, nearestValue;
+        let nearestValue;
         let quantError;
         let x;
         let y;
@@ -84,7 +84,6 @@ class DitheredLinearGradient {
         let rBuffer = [];
         let gBuffer = [];
         let bBuffer = [];
-        let aBuffer = [];
 
         //first complete color stops with 0 and 1 ratios if not already present
         if (this.colorStops[0].ratio !== 0) {
