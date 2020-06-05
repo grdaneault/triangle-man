@@ -72,3 +72,7 @@ button.ZoomToggle {
   right: 0;
   margin: 32px;
 }
+
+canvas {
+  box-shadow: 0 0 30px #808080;
+}

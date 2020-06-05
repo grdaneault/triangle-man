@@ -58,7 +58,7 @@ function Controls({pointSettings, points, triangles, pixiApp, currentTheme, upda
     };
 
     return (
-        <Card className="Controls">
+        <Card className="Controls" elevation={3}>
             <CardActionArea>
                 <CardMedia component={ImageThemeSource}/>
             </CardActionArea>
