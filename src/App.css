@@ -31,6 +31,7 @@ div.App {
   width: 100%;
   height: 100%;
   display: flex;
+  overflow: hidden;
 }
 
 div.Loading {
@@ -48,6 +49,14 @@ img.SourceImage {
   max-width: 100%;
 }
 
+div.WallpaperContainer {
+  /* set line-height to avoid extra space after the wallpaper <canvas> */
+  line-height: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
 .ControlFormItem {
   width: 100%;
   margin-top: 16px;
@@ -55,4 +64,11 @@ img.SourceImage {
 
 .FullWidth {
   width: 100%;
+}
+
+button.ZoomToggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 32px;
 }
