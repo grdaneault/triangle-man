@@ -10,6 +10,8 @@ import MdExpand from "react-ionicons/lib/MdExpand";
 import MdContract from "react-ionicons/lib/MdContract";
 import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
+import Slide from "@material-ui/core/Slide";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 function Wallpaper(props) {
@@ -66,7 +68,11 @@ function Wallpaper(props) {
                     </Graphics>
                 </Provider>
             </Stage>
-            <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <MdExpand /> : <MdContract />}</Fab>
+            <Slide direction="left" in={true} mountOnEnter unmountOnExit>
+                <Tooltip placement={"left"} title={zoomFit ? "Fill Screen" : "Shrink to fit"} aria-label={zoomFit ? "fill screen" : "shrink to fit"} >
+                    <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <MdExpand /> : <MdContract />}</Fab>
+                </Tooltip>
+            </Slide>
         </Box>)
 }
 
