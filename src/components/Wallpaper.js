@@ -15,7 +15,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 
 function Wallpaper(props) {
-    const [zoomFit, setZoomFit] = useState(true);
+    const [zoomFit, setZoomFit] = useState(false);
 
     const triangles = props.triangles.map(triangle => <Triangle id={triangle.id} key={triangle.id}/>)
 
@@ -43,15 +43,15 @@ function Wallpaper(props) {
     const canvasStyle = {};
     if (windowSize.width / width * height > windowSize.height) {
         if (zoomFit) {
-            canvasStyle.height = windowSize.height;
+            canvasStyle.height = Math.min(height, windowSize.height);
         } else {
-            canvasStyle.width = windowSize.width;
+            canvasStyle.width = Math.min(width, windowSize.width);
         }
     } else {
         if (zoomFit) {
-            canvasStyle.width = windowSize.width;
+            canvasStyle.width = Math.min(width, windowSize.width);
         } else {
-            canvasStyle.height = windowSize.height;
+            canvasStyle.height = Math.min(height, windowSize.height);
         }
     }
 
@@ -60,6 +60,7 @@ function Wallpaper(props) {
             <Stage options={options}
                    onMount={props.registerApp}
                    style={canvasStyle}
+                   key={width + "x" + height}
             >
                 <Provider store={store}>
                     <Graphics>

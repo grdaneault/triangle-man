@@ -68,9 +68,14 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
     }).flat();
     resolutionOptions.push(<MenuItem value="custom">Custom</MenuItem>)
 
-    console.log(resolutionOptions);
+    const [customWidth, setCustomWidth] = useState(width);
+    const [customHeight, setCustomHeight] = useState(height);
 
-    console.log("Resolution selector IsCustom=%s", isCustomResolution, KNOWN_RESOLUTIONS.find(group => group.resolutions.find(res => res.width === width && res.height === height)));
+    const dimensionChangeHandler = (setter) => event => {
+        const numericValue = event.target.value.replace(/\D/gi, '');
+        setter(parseInt(numericValue, 10));
+    }
+
     return (
         <Box>
             <Grid item className="ControlFormItem" >
@@ -95,13 +100,16 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
             {isCustomResolution && (
                 <Grid container spacing={1} className="ControlFormItem" alignItems="center">
                     <Grid item xs={4}>
-                        <TextField id="" label="Width" value={width}/>
+                        <TextField id="" label="Width" value={customWidth} onChange={dimensionChangeHandler(setCustomWidth)}/>
                     </Grid>
                     <Grid item xs={4}>
-                        <TextField id="" label="Height" value={height}/>
+                        <TextField id="" label="Height" value={customHeight} onChange={dimensionChangeHandler(setCustomHeight)}/>
                     </Grid>
                     <Grid item>
-                        <Button startIcon={<CheckIcon/>}>Apply</Button>
+                        <Button startIcon={<CheckIcon/>} onClick={() => {
+                            setTargetResolution(customWidth, customHeight);
+                            redraw();
+                        }}>Apply</Button>
                     </Grid>
                 </Grid>)}
         </Box>
