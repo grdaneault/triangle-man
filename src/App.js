@@ -23,7 +23,7 @@ function App(props) {
     }, [setTargetResolution, addImageTheme, generateWallpaper, screenWidth, screenHeight]);
 
     return (
-        <div className={`App Shrink`}>
+        <div className={"App"}>
             <Backdrop className="Loading" open={renderState !== READY}>
                 {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
                 <CircularProgress color={"inherit"} size={180} disableShrink />
