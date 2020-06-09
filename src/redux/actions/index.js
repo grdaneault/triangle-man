@@ -124,10 +124,10 @@ export const applyCurrentThemeIfLoaded = () => (dispatch, getState) => {
 export const applyCurrentTheme = () => (dispatch, getState) => {
     const themeName = getState().currentTheme;
     const triangles = getState().triangles;
-    const points = getState().points;
+    const resolution = getState().resolution;
     const theme = getState().themes[themeName];
 
-    const fillFunction = generateFillFunctionForImageTheme(theme, points);
+    const fillFunction = generateFillFunctionForImageTheme(theme, resolution);
 
     const fills = triangles.reduce((map, triangle) => {
         map[triangle.id] = fillFunction(triangle.points)

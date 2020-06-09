@@ -39,28 +39,15 @@ export function createGradientTexture(from, to, size) {
     return Texture.from(c);
 }
 
-function calcBounds(points) {
-    return points.reduce((acc, curr) => (
-        {
-            minX: Math.min(acc.minX, curr.x),
-            maxX: Math.max(acc.maxX, curr.x),
-            minY: Math.min(acc.minY, curr.y),
-            maxY: Math.max(acc.maxY, curr.y)
-        }), {
-        minX: 0, maxX: 0, minY: 0, maxY: 0
-    });
-}
-
-export function generateFillFunctionForImageTheme(theme, allPoints) {
-    const bounds = calcBounds(allPoints);
+export function generateFillFunctionForImageTheme(theme, resolution) {
     const gradientCache = [];
 
     return (points) => {
         const center = [(points[0][0] + points[1][0] + points[2][0]) / 3, (points[0][1] + points[1][1] + points[2][1]) / 3];
         // points |     x                          |
         // img        |   x                        |
-        const x = Math.round((center[0] - bounds.minX) / (bounds.maxX - bounds.minX) * theme.width);
-        const y = Math.round((center[1] - bounds.minY) / (bounds.maxY - bounds.minY) * theme.height);
+        const x = Math.round(center[0] / resolution.width * theme.width);
+        const y = Math.round(center[1] / resolution.height * theme.height);
 
         // console.log(`Calculating fill for (${center[0]}, ${center[1]}) => (${x}, ${y})`)
         const index = (theme.width * y + x) * 4;
