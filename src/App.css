@@ -71,11 +71,11 @@ div.WallpaperContainer {
   width: 100%;
 }
 
-button.ZoomToggle {
+.BottomRightSlideInArea {
   position: absolute;
   bottom: 0;
   right: 0;
-  margin: 32px;
+  padding: 128px 32px 32px 128px;
 }
 
 canvas {

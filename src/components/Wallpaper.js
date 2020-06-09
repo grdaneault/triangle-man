@@ -12,6 +12,8 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Slide from "@material-ui/core/Slide";
 import Tooltip from "@material-ui/core/Tooltip";
+import useHover from "../hooks/hover";
+import useTimeDelay from "../hooks/timeDelay";
 
 
 function Wallpaper(props) {
@@ -55,6 +57,9 @@ function Wallpaper(props) {
         }
     }
 
+    const [zoomBoxHoverRef, isZoomBoxHovered] = useHover();
+    const [initialLoadHoldOpenExpired] = useTimeDelay(5000);
+
     return (
         <Box className="WallpaperContainer">
             <Stage options={options}
@@ -69,11 +74,13 @@ function Wallpaper(props) {
                     </Graphics>
                 </Provider>
             </Stage>
-            <Slide direction="left" in={true} mountOnEnter unmountOnExit>
-                <Tooltip placement={"left"} title={zoomFit ? "Fill Screen" : "Shrink to fit"} aria-label={zoomFit ? "fill screen" : "shrink to fit"} >
-                    <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <MdExpand /> : <MdContract />}</Fab>
-                </Tooltip>
-            </Slide>
+            <div className={"BottomRightSlideInArea"} ref={zoomBoxHoverRef}>
+                <Slide direction="left" in={isZoomBoxHovered || !initialLoadHoldOpenExpired} mountOnEnter unmountOnExit>
+                    <Tooltip placement={"left"} title={zoomFit ? "Fill Screen" : "Shrink to fit"} aria-label={zoomFit ? "fill screen" : "shrink to fit"} >
+                        <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <MdExpand /> : <MdContract />}</Fab>
+                    </Tooltip>
+                </Slide>
+            </div>
         </Box>)
 }
 
