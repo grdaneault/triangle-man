@@ -19,6 +19,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import Box from "@material-ui/core/Box";
 
 function Controls({pointSettings, points, triangles, pixiApp, currentTheme, updateSettings, generateWallpaper, applyCurrentTheme}) {
 
@@ -64,41 +65,50 @@ function Controls({pointSettings, points, triangles, pixiApp, currentTheme, upda
             </CardActionArea>
             <CardContent>
                 <FormGroup>
-                    <InputLabel id="resolution-select-label">Resolution</InputLabel>
-                    <ResolutionSelector redraw={redraw}/>
-
-                    <Typography id="grid-size-slider" gutterBottom>
-                        Grid Size
-                    </Typography>
-                    <Slider min={25}
-                            max={600}
-                            step={25}
-                            value={gridSize}
-                            onChange={(_, value) => setGridSize(value)}
-                            onChangeCommitted={handleGridSizeCommit}
-                            getAriaValueText={pxLabel}
-                            valueLabelDisplay="auto"
-                            valueLabelFormat={pxLabel}
-                            aria-labelledby="grid-size-slider"/>
-                    <Typography id="point-chance-slider" gutterBottom>
-                        Point Chance
-                    </Typography>
-                    <Slider min={20}
-                            max={100}
-                            step={5}
-                            value={pointChance}
-                            onChange={(_, value) => setPointChance(value)}
-                            onChangeCommitted={handlePointChanceCommit}
-                            getAriaValueText={percentLabel}
-                            valueLabelDisplay="auto"
-                            valueLabelFormat={percentLabel}
-                            aria-labelledby="point-chance-slider"/>
-                    <p className="Details">Number of points: {points.length}</p>
-                    <p className="Details">Number of triangles: {triangles.length}</p>
-                    <FormControlLabel
-                        control={<Switch checked={pointSettings.visible} onChange={handleShowPointsChange}/>}
-                        label="Show points"
-                    />
+                    <Box className={"FormControl"}>
+                        <InputLabel id="resolution-select-label">Resolution</InputLabel>
+                        <ResolutionSelector redraw={redraw}/>
+                    </Box>
+                    <Box className={"FormControl"}>
+                        <InputLabel id="grid-size-slider">
+                            Grid Size
+                        </InputLabel>
+                        <Slider min={25}
+                                max={600}
+                                step={25}
+                                value={gridSize}
+                                onChange={(_, value) => setGridSize(value)}
+                                onChangeCommitted={handleGridSizeCommit}
+                                getAriaValueText={pxLabel}
+                                valueLabelDisplay="auto"
+                                valueLabelFormat={pxLabel}
+                                aria-labelledby="grid-size-slider"/>
+                    </Box>
+                    <Box className={"FormControl"}>
+                        <InputLabel id="point-chance-slider">
+                            Point Chance
+                        </InputLabel>
+                        <Slider min={20}
+                                max={100}
+                                step={5}
+                                value={pointChance}
+                                onChange={(_, value) => setPointChance(value)}
+                                onChangeCommitted={handlePointChanceCommit}
+                                getAriaValueText={percentLabel}
+                                valueLabelDisplay="auto"
+                                valueLabelFormat={percentLabel}
+                                aria-labelledby="point-chance-slider"/>
+                    </Box>
+                    <Box className={"FormControl"}>
+                        <Typography className="Details">Number of points: {points.length}</Typography>
+                        <Typography className="Details">Number of triangles: {triangles.length}</Typography>
+                    </Box>
+                    <Box className={"FormControl"}>
+                        <FormControlLabel
+                            control={<Switch checked={pointSettings.visible} onChange={handleShowPointsChange}/>}
+                            label="Show points"
+                        />
+                    </Box>
                 </FormGroup>
             </CardContent>
             <CardActions>

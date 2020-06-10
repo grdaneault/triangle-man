@@ -81,7 +81,7 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
 
     return (
         <Box>
-            <Grid item className="ControlFormItem" >
+            <Box className={"FormControl"}>
                 <Select className="FullWidth"
                         labelId="resolution-select-label"
                         id="resolution-select"
@@ -98,9 +98,9 @@ function ResolutionSelector({redraw, resolution: {width, height}, setTargetResol
                         }}>
                     {resolutionOptions}
                 </Select>
-            </Grid>
+            </Box>
             {isCustomResolution && (
-                <Grid container spacing={1} className="ControlFormItem" alignItems="center">
+                <Grid container spacing={1} className="FormControl" alignItems="center">
                     <Grid item xs={4}>
                         <TextField id="" label="Width" value={customWidth} onChange={dimensionChangeHandler(setCustomWidth)}/>
                     </Grid>

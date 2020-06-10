@@ -10,6 +10,18 @@ import Controls from "./components/Controls";
 import defaultImage from './img/sample9.jpg';
 import {READY} from "./redux/reducers/renderState";
 
+import { createMuiTheme } from '@material-ui/core/styles';
+import lightBlue from '@material-ui/core/colors/lightBlue';
+import green from '@material-ui/core/colors/green';
+import {ThemeProvider} from "@material-ui/styles";
+
+const theme = createMuiTheme({
+    palette: {
+        primary: green,
+        secondary: lightBlue
+    }
+});
+
 function App(props) {
 
     const {renderState, generateWallpaper, addImageTheme, setTargetResolution} = props;
@@ -24,15 +36,17 @@ function App(props) {
 
     return (
         <div className={"App"}>
-            <Backdrop className="Loading" open={renderState !== READY}>
-                {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
-                <CircularProgress color={"inherit"} size={180} disableShrink />
-                <Typography>
-                    {renderState}
-                </Typography>
-            </Backdrop>
-            <Controls />
-            <Wallpaper />
+            <ThemeProvider theme={theme}>
+                <Backdrop className="Loading" open={renderState !== READY}>
+                    {/* disable Shrink Animation because the load of generating the wallpaper is too much*/}
+                    <CircularProgress color={"inherit"} size={180} disableShrink />
+                    <Typography>
+                        {renderState}
+                    </Typography>
+                </Backdrop>
+                <Controls />
+                <Wallpaper />
+            </ThemeProvider>
         </div>
     );
 }

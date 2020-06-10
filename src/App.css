@@ -13,7 +13,7 @@
 
 .Controls p.Details {
   padding: 0;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.4rem;
 }
 
 body, html, div#root {
@@ -82,7 +82,10 @@ canvas {
   box-shadow: 0 0 30px #808080;
 }
 
-
 .MuiTooltip-popper .MuiTooltip-tooltip {
   font-size: 0.9em;
+}
+
+.FormControl {
+  margin-bottom: 8px;
 }
