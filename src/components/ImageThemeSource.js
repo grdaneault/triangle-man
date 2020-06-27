@@ -21,27 +21,50 @@ function ImageThemeSource(props) {
         const width = img.naturalWidth;
         const height = img.naturalHeight;
         canvas.width = width;
-        canvas.height = height
+        canvas.height = height;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
         const textureData = ctx.getImageData(0, 0, width, height).data;
-        loadImageTheme(newThemeName, textureData, width, height)
-        setTheme(newThemeName)
-        applyCurrentTheme()
+        loadImageTheme(newThemeName, textureData, width, height);
+        setTheme(newThemeName);
+        applyCurrentTheme();
     }
 
-    const onDrop = useCallback(acceptedFiles => {
+    // Drop zone for supplying a new image
+    const handleNewImageFile = useCallback(acceptedFiles => {
         const reader = new FileReader();
         const themeName = `img-${acceptedFiles[0].name}`;
         reader.onload = (event) => {
             setImageSource(event.target.result);
-            setNewThemeName(themeName)
-            addImageTheme(themeName, event.target.result)
+            setNewThemeName(themeName);
+            addImageTheme(themeName, event.target.result);
         }
         reader.readAsDataURL(acceptedFiles[0]);
 
-    }, [addImageTheme])
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
+    }, [addImageTheme]);
+
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop: handleNewImageFile});
+
+    // Global paste for supplying a new image
+    useEffect(() => {
+        const handlePaste = (event) => {
+            const items = event.clipboardData.items;
+            if (!items) {
+                return;
+            }
+            for (let i = 0; i < items.length; i++) {
+                const imageFile = items[i];
+                if (imageFile.type.indexOf("image") !== -1) {
+                    console.log("Found image file", imageFile)
+                    handleNewImageFile([imageFile.getAsFile()]);
+                }
+            }
+        }
+
+        window.addEventListener("paste", handlePaste);
+
+        return () => window.removeEventListener("paste", handlePaste);
+    }, [handleNewImageFile]);
 
     return (
         <Box {...getRootProps()} className={isDragActive ? 'ImageDrop Active' : 'ImageDrop Inactive'}>
