@@ -39,6 +39,10 @@ export function createGradientTexture(from, to, size) {
     return Texture.from(c);
 }
 
+const clampToOne = (value) => {
+    return Math.min(1, Math.max(0, value));
+};
+
 export function generateFillFunctionForImageTheme(theme, resolution) {
     const gradientCache = [];
 
@@ -46,8 +50,8 @@ export function generateFillFunctionForImageTheme(theme, resolution) {
         const center = [(points[0][0] + points[1][0] + points[2][0]) / 3, (points[0][1] + points[1][1] + points[2][1]) / 3];
         // points |     x                          |
         // img        |   x                        |
-        const x = Math.round(center[0] / resolution.width * theme.width);
-        const y = Math.round(center[1] / resolution.height * theme.height);
+        const x = Math.round(clampToOne(center[0] / resolution.width) * theme.width);
+        const y = Math.round(clampToOne(center[1] / resolution.height) * theme.height);
 
         // console.log(`Calculating fill for (${center[0]}, ${center[1]}) => (${x}, ${y})`)
         const index = (theme.width * y + x) * 4;
