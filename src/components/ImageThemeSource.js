@@ -43,24 +43,6 @@ function ImageThemeSource(props) {
     }, [addImageTheme])
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
-    const dropProps = getRootProps();
-    console.log("drop props", dropProps)
-    const original = dropProps.onDrop;
-    dropProps.onDrop = event => {
-        console.log("Intercepted onDrop for event", event)
-        if (event.dataTransfer && event.dataTransfer.getData("text")) {
-            const droppedImageUrl = event.dataTransfer.getData("text");
-            console.log("Event has urls?", droppedImageUrl)
-            const droppedImageName = droppedImageUrl.split("/")[-1];
-            setNewThemeName(droppedImageName)
-            setImageSource(droppedImageUrl)
-            event.stopPropagation();
-            event.preventDefault();
-        }
-        console.log("did my part");
-        original(event);
-    }
-
     return (
         <Box {...getRootProps()} className={isDragActive ? 'ImageDrop Active' : 'ImageDrop Inactive'}>
             <input {...getInputProps()} />
