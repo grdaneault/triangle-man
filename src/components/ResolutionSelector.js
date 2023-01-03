@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import Box from "@material-ui/core/Box";
+import Box from "@mui/material/Box";
 import {connect} from "react-redux";
-import Select from "@material-ui/core/Select";
+import Select from "@mui/material/Select";
 import {setTargetResolution} from "../redux/actions";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import CheckIcon from '@material-ui/icons/Check';
-import MenuItem from "@material-ui/core/MenuItem";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import CheckIcon from '@mui/icons-material/Check';
+import MenuItem from "@mui/material/MenuItem";
+import ListSubheader from "@mui/material/ListSubheader";
 
 const KNOWN_RESOLUTIONS = [
     {

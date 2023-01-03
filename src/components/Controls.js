@@ -1,25 +1,25 @@
 import React, {useState} from 'react';
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import {connect} from "react-redux";
 import {applyCurrentTheme, generateWallpaper, setTargetResolution, updateSettings} from "../redux/actions";
 import {saveAs} from "file-saver";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Switch from "@material-ui/core/Switch";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import Slider from "@material-ui/core/Slider";
-import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import Switch from "@mui/material/Switch";
+import GetAppIcon from '@mui/icons-material/GetApp';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
 import {debounce} from "underscore";
 import ImageThemeSource from "./ImageThemeSource";
-import InputLabel from "@material-ui/core/InputLabel";
+import InputLabel from "@mui/material/InputLabel";
 import ResolutionSelector from "./ResolutionSelector";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Box from "@material-ui/core/Box";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
 
 function Controls({pointSettings, points, triangles, pixiApp, currentTheme, updateSettings, generateWallpaper, applyCurrentTheme}) {
 

@@ -6,12 +6,11 @@ import store from "../redux/store";
 import {addPoint, registerApp} from "../redux/actions";
 import Triangle from "./Triangle";
 import useWindowSize from "../hooks/windowSize";
-import MdExpand from "react-ionicons/lib/MdExpand";
-import MdContract from "react-ionicons/lib/MdContract";
-import Fab from "@material-ui/core/Fab";
-import Box from "@material-ui/core/Box";
-import Slide from "@material-ui/core/Slide";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Expand, Contract } from "react-ionicons";
+import Fab from "@mui/material/Fab";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
+import Tooltip from "@mui/material/Tooltip";
 import useHover from "../hooks/hover";
 import useTimeDelay from "../hooks/timeDelay";
 
@@ -65,6 +64,8 @@ function Wallpaper(props) {
             <Stage options={options}
                    onMount={props.registerApp}
                    style={canvasStyle}
+                   width={width}
+                   height={height}
                    key={width + "x" + height}
             >
                 <Provider store={store}>
@@ -77,7 +78,7 @@ function Wallpaper(props) {
             <div className={"BottomRightSlideInArea"} ref={zoomBoxHoverRef}>
                 <Slide direction="left" in={isZoomBoxHovered || !initialLoadHoldOpenExpired} mountOnEnter unmountOnExit>
                     <Tooltip placement={"left"} title={zoomFit ? "Fill Screen" : "Shrink to fit"} aria-label={zoomFit ? "fill screen" : "shrink to fit"} >
-                        <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <MdExpand /> : <MdContract />}</Fab>
+                        <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <Expand /> : <Contract />}</Fab>
                     </Tooltip>
                 </Slide>
             </div>

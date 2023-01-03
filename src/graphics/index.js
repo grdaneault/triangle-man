@@ -61,7 +61,7 @@ export function generateFillFunctionForImageTheme(theme, resolution) {
 
         const match = gradientCache.filter((item) => chroma.distance(start, item.start) < 1.5);
         if (match && match.length > 0) {
-            console.log("Reused a gradient")
+            // console.log("Reused a gradient")
             return match[0].gradient
         } else {
             const gradient = createGradientTexture(start, end, 256)

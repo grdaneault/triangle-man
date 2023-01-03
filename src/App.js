@@ -3,19 +3,19 @@ import './App.css';
 import {addImageTheme, generateWallpaper, setTargetResolution} from "./redux/actions";
 import {connect} from "react-redux";
 import Wallpaper from "./components/Wallpaper";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Typography from "@material-ui/core/Typography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 import Controls from "./components/Controls";
 import defaultImage from './img/sample9.jpg';
 import {READY} from "./redux/reducers/renderState";
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import lightBlue from '@material-ui/core/colors/lightBlue';
-import green from '@material-ui/core/colors/green';
-import {ThemeProvider} from "@material-ui/styles";
+import { createTheme } from '@mui/material/styles';
+import lightBlue from '@mui/material/colors/lightBlue';
+import green from '@mui/material/colors/green';
+import {ThemeProvider} from "@mui/styles";
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         primary: green,
         secondary: lightBlue
