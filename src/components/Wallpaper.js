@@ -18,13 +18,12 @@ import useTimeDelay from "../hooks/timeDelay";
 function Wallpaper(props) {
     const [zoomFit, setZoomFit] = useState(false);
 
-    const triangles = props.triangles.map(triangle => <Triangle id={triangle.id} key={triangle.id}/>)
+    const triangles = props.triangles.map(triangle => <Triangle id={triangle.id} key={triangle.id} />)
 
     let points = [];
     if (props.showPoints) {
-        points = props.points.map((point) => <Point x={point.x}
-                                                    y={point.y}
-                                                    size={25}
+        points = props.points.map((point) => <Point size={10}
+                                                    // key={`${point.x}-${point.y}`}
                                                     key={point.id}
                                                     id={point.id}/>)
     }

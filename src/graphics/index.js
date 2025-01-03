@@ -47,7 +47,7 @@ export function generateFillFunctionForImageTheme(theme, resolution) {
     const gradientCache = [];
 
     return (points) => {
-        const center = [(points[0][0] + points[1][0] + points[2][0]) / 3, (points[0][1] + points[1][1] + points[2][1]) / 3];
+        const center = [(points[0].x + points[1].x + points[2].x) / 3, (points[0].y + points[1].y + points[2].y) / 3];
         // points |     x                          |
         // img        |   x                        |
         const x = Math.round(clampToOne(center[0] / resolution.width) * (theme.width - 1));

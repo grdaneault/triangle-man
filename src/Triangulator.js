@@ -3,7 +3,7 @@ import Delaunator from "delaunator";
 class Triangulator {
     constructor(points) {
         this.points = points;
-        this.delaunay = Delaunator.from(points);
+        this.delaunay = Delaunator.from(points, p => p.x, p => p.y);
     }
 
     edgesOfTriangle(t) {
@@ -21,6 +21,8 @@ class Triangulator {
             callback(t, {...createTriangle(points)});
         }
     }
+
+
 }
 
 export default Triangulator
@@ -48,18 +50,18 @@ const calculateArea = (lengths) => {
 /**
  * Calculate the distance between two points
  *
- * @param a first point [x, y]
- * @param b second point [x, y]
+ * @param a {{x: number, y: number}} first point
+ * @param b {{x: number, y: number}} second point {x, y}
  * @returns {number}
  */
 const distance = (a, b) => {
-    return Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
+    return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
 }
 
 /**
  * Calculate the lengths of each side of the triangle
  *
- * @param points [[x1, y1], [x2, y2], [x3, y3]]
+ * @param points {[{x: number, y: number}, {x: number, y: number}, {x: number, y: number}]}
  * @returns {[number, number, number]}
  */
 const calculateSideLengths = (points) => {
@@ -89,7 +91,7 @@ const calculateAltitudes = (lengths) => {
  *    /  |  \
  *   2---b---1
  *
- * @param points
+ * @param points {[{x: number, y: number}, {x: number, y: number}, {x: number, y: number}]}
  * @returns {{altitudes: number[], sideLengths: number[], points: *}}
  */
 export const createTriangle = (points) => {

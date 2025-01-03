@@ -46,8 +46,21 @@ export const addPointsAndGenerateTriangles = (points) => (dispatch) => {
     dispatch(reset())
     dispatch(addPoints(points));
     dispatch(generateTriangles())
-    const delaunayPoints = points.map((point) => [point.x, point.y])
-    const triangulator = new Triangulator(delaunayPoints)
+    internalRetriangulateWithPoints(dispatch, points)
+}
+
+export const removePointAndUpdateTriangles = (id) => (dispatch, getState) => {
+    dispatch(deletePoint(id))
+    internalRetriangulate(dispatch, getState)
+}
+
+const internalRetriangulate = (dispatch, getState) => {
+    const {points} = getState()
+    internalRetriangulateWithPoints(dispatch, points)
+}
+
+const internalRetriangulateWithPoints = (dispatch, points) => {
+    const triangulator = new Triangulator(points, p => p.x, p => p.y)
     const newTriangles = [];
     triangulator.forEachTriangle((index, triangle) => {
         newTriangles.push({
@@ -56,6 +69,17 @@ export const addPointsAndGenerateTriangles = (points) => (dispatch) => {
         });
     })
     dispatch(updateTriangles(newTriangles))
+    dispatch(applyCurrentThemeIfLoaded());
+}
+
+export const movePointAndUpdateTriangles = (id, oldX, oldY, newX, newY) => (dispatch, getState) => {
+    dispatch(setPointPosition(id, oldX, oldY, newX, newY));
+    internalRetriangulate(dispatch, getState)
+}
+
+export const addPointAndUpdateTriangles = (x, y) => (dispatch, getState) => {
+    dispatch(addPoint(x, y))
+    internalRetriangulate(dispatch, getState)
 }
 
 export const addPoint = (x, y) => ({
@@ -64,9 +88,9 @@ export const addPoint = (x, y) => ({
     x, y
 })
 
-export const setPointPosition = (id, oldX, oldY, newX, newY, recalculateTriangles = false) => ({
+export const setPointPosition = (id, oldX, oldY, newX, newY) => ({
     type: SET_POINT_POSITION,
-    id, oldX, oldY, newX, newY, recalculateTriangles
+    id, oldX, oldY, newX, newY
 })
 
 
@@ -118,7 +142,10 @@ export const applyCurrentThemeIfLoaded = () => (dispatch, getState) => {
     const currentTheme = getState().currentTheme;
     if (getState().themes[currentTheme].data) {
         dispatch(applyCurrentTheme());
+    } else {
+        console.log("No theme!")
     }
+
 }
 
 export const applyCurrentTheme = () => (dispatch, getState) => {

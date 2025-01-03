@@ -1,7 +1,7 @@
 import {Graphics, Matrix, Polygon} from 'pixi.js';
 import {PixiComponent} from '@inlet/react-pixi';
 import {connect} from "react-redux";
-import {colorTriangle} from "../redux/actions";
+import {addPointAndUpdateTriangles, colorTriangle} from "../redux/actions";
 import {createGradientTexture} from "../graphics";
 
 const defaultGradient = createGradientTexture('#DDDDDD', '#FFFFFF', 256)
@@ -9,7 +9,7 @@ const defaultGradient = createGradientTexture('#DDDDDD', '#FFFFFF', 256)
 const Triangle = PixiComponent('Triangle', {
     create: _ => new Graphics(),
     applyProps: (instance, oldProps, newProps) => {
-        const {points, sideLengths, altitudes, fill} = newProps;
+        const {points, sideLengths, altitudes, fill, addPointAndUpdateTriangles} = newProps;
         if (!points) {
             // not sure why this update is happening, but the triangles seem to be attempting to update to a no-data state on regen.
             return;
@@ -21,14 +21,16 @@ const Triangle = PixiComponent('Triangle', {
             }
         }
 
-        const slope = (points[(longestSide + 1) % 3][1] - points[longestSide][1]) / (points[(longestSide + 1) % 3][0] - points[longestSide][0])
-        const tri = new Polygon(points.flat());
+        const slope = (points[(longestSide + 1) % 3].y - points[longestSide].y) / (points[(longestSide + 1) % 3].x - points[longestSide].x)
+        const tri = new Polygon(points);
         tri.interactive = true;
 
         instance.interactive = true;
         instance.hitArea = tri;
         instance.buttonMode = true;
-        // instance.click = (e) => {console.log("click triangle", points, e); colorTriangle(id, !fill)}
+        instance.click = (e) => {
+            addPointAndUpdateTriangles(e.data.global.x, e.data.global.y);
+        }
 
         const resolution = 256;
         let texture = fill ? fill : defaultGradient;
@@ -43,9 +45,7 @@ const Triangle = PixiComponent('Triangle', {
                 matrix: new Matrix()
                     .scale(sideLengths[longestSide] / resolution * Math.sign(slope), altitudes[longestSide] / resolution * Math.sign(slope))
                     .rotate(Math.atan(slope))
-                    .translate(points[(longestSide + 1) % 3][0], points[(longestSide + 1) % 3][1])
-
-
+                    .translate(points[(longestSide + 1) % 3].x, points[(longestSide + 1) % 3].y)
                 // .rotate(Math.atan(slope))
 
             })
@@ -60,4 +60,4 @@ const mapStateToProps = (state, ownProps) => {
         ...state.triangles.find(t => t.id === ownProps.id),
     }
 }
-export default connect(mapStateToProps, {colorTriangle})(Triangle);
+export default connect(mapStateToProps, {colorTriangle, addPointAndUpdateTriangles})(Triangle);

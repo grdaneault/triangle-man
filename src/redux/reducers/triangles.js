@@ -17,25 +17,24 @@ function triangles(state = [], action) {
                 return {...triangle, fill}
             })
         case SET_POINT_POSITION:
-            console.log("updating point in state", action);
+            // console.log("updating point in state", action);
             return state.map((triangle) => {
                 const newPoints = [];
-                if (triangle.points[0][0] === action.oldX && triangle.points[0][1] === action.oldY) {
-                    newPoints.push([action.newX, action.newY]);
-                    newPoints.push([...triangle.points[1]]);
-                    newPoints.push([...triangle.points[2]]);
-                } else if (triangle.points[1][0] === action.oldX && triangle.points[1][1] === action.oldY) {
-                    newPoints.push([...triangle.points[0]]);
-                    newPoints.push([action.newX, action.newY]);
-                    newPoints.push([...triangle.points[2]]);
-                } else if (triangle.points[2][0] === action.oldX && triangle.points[2][1] === action.oldY) {
-                    newPoints.push([...triangle.points[0]]);
-                    newPoints.push([...triangle.points[1]]);
-                    newPoints.push([action.newX, action.newY]);
+                if (triangle.points[0].x === action.oldX && triangle.points[0].y === action.oldY) {
+                    newPoints.push({x: action.newX, y: action.newY});
+                    newPoints.push(triangle.points[1]);
+                    newPoints.push(triangle.points[2]);
+                } else if (triangle.points[1].x === action.oldX && triangle.points[1].y === action.oldY) {
+                    newPoints.push(triangle.points[0]);
+                    newPoints.push({x: action.newX, y: action.newY});
+                    newPoints.push(triangle.points[2]);
+                } else if (triangle.points[2].x === action.oldX && triangle.points[2].y === action.oldY) {
+                    newPoints.push(triangle.points[0]);
+                    newPoints.push(triangle.points[1]);
+                    newPoints.push({x: action.newX, y: action.newY});
                 }
 
                 if (newPoints.length === 3) {
-                    console.log(newPoints)
                     return Object.assign({}, triangle, createTriangle(newPoints));
                 } else {
                     return triangle
