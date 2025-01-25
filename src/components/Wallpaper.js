@@ -6,7 +6,7 @@ import store from "../redux/store";
 import {addPoint, registerApp} from "../redux/actions";
 import Triangle from "./Triangle";
 import useWindowSize from "../hooks/windowSize";
-import { Expand, Contract } from "react-ionicons";
+import { IoExpand , IoContract  } from "react-icons/io5";
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
@@ -77,7 +77,7 @@ function Wallpaper(props) {
             <div className={"BottomRightSlideInArea"} ref={zoomBoxHoverRef}>
                 <Slide direction="left" in={isZoomBoxHovered || !initialLoadHoldOpenExpired} mountOnEnter unmountOnExit>
                     <Tooltip placement={"left"} title={zoomFit ? "Fill Screen" : "Shrink to fit"} aria-label={zoomFit ? "fill screen" : "shrink to fit"} >
-                        <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <Expand /> : <Contract />}</Fab>
+                        <Fab className={"ZoomToggle"} onClick={() => setZoomFit(!zoomFit)}>{zoomFit ? <IoExpand size={24} /> : <IoContract size={24} />}</Fab>
                     </Tooltip>
                 </Slide>
             </div>
